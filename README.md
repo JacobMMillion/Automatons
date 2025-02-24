@@ -12,9 +12,7 @@ Automatons is a project designed to manage and update influencer data. The proje
 
 - **db_manager.py:**  
   This module handles all interactions with the database. It includes functions to:
-  - Add and update view counts.
-  - Log additional data such as comments and captions.
-  - Retrieve and manage database records.
+  - Log additional data for each URL such as comments and captions.
 
 - **run_apify_update.py:**  
   This script uses `db_manager.py` to iterate over data and update influencer metrics. Specifically, it:
