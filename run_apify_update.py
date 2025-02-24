@@ -43,14 +43,12 @@ APIFY_CLIENT = ApifyClient(APIFY_API_KEY)
 
 # APPS AND THE ASSOCIATED ASSOCIATES WITH INFLUENCER MANAGEMENT PAGES
 
-PROJECTS = {"Astra": ["Cara", "Chad", "Gray", "Dylano", "Jake"]}
-
-# PROJECTS = {
-#     "Astra": ["Cara", "Chad", "Gray", "Dylano", "Jake"],
-#     "Haven": ["Jake", "Dylano", "Blaise"],
-#     "Berry": ["Cara", "Alina", "Ashley"],
-#     "Saga": ["Alina", "Avi", "Dylan", "Jake"]
-# }
+PROJECTS = {
+    "Astra": ["Cara", "Chad", "Gray", "Dylano", "Jake"],
+    "Haven": ["Jake", "Dylano", "Blaise"],
+    "Berry": ["Cara", "Alina", "Ashley"],
+    "Saga": ["Alina", "Avi", "Dylan", "Jake"]
+}
 
 # SHEETS (lowercased) THAT SHOULD BE SKIPPED DURING PROCESSING
 SKIP_TABS = [
