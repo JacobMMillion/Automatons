@@ -1,0 +1,29 @@
+{% extends 'template.html' %}
+
+{% block title %}Overview{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Daily Video Data</h1>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    {% for header in headers %}
+                    <th>{{ header }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in rows %}
+                <tr>
+                    {% for cell in row %}
+                    <td>{{ cell }}</td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

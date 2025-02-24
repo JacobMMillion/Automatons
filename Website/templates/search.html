@@ -1,0 +1,47 @@
+{% extends 'template.html' %}
+
+{% block title %}Search{% endblock %}
+
+{% block content %}
+  <h1>Search Page</h1>
+  <form method="GET" action="{{ url_for('search') }}">
+    <label for="category">Category:</label>
+    <select id="category" name="category">
+      <option value="post_url" {% if category == 'post_url' %}selected{% endif %}>URL</option>
+      <option value="create_time" {% if category == 'create_time' %}selected{% endif %}>Post Date</option>
+      <option value="creator_username" {% if category == 'creator_username' %}selected{% endif %}>Creator Username</option>
+      <option value="marketing_associate" {% if category == 'marketing_associate' %}selected{% endif %}>Associate</option>
+      <option value="app" {% if category == 'app' %}selected{% endif %}>App</option>
+      <option value="log_time" {% if category == 'log_time' %}selected{% endif %}>Log Date</option>
+    </select>    
+    <label for="value">Value:</label>
+    <input type="text" id="value" name="value" value="{{ value or '' }}">
+    <button type="submit">Search</button>
+  </form>
+
+  {% if headers and rows %}
+    <h2>Search Results</h2>
+    <div class="table-responsive">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            {% for header in headers %}
+              <th>{{ header }}</th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in rows %}
+            <tr>
+              {% for cell in row %}
+                <td>{{ cell }}</td>
+              {% endfor %}
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% elif category and value %}
+    <p>No results found.</p>
+  {% endif %}
+{% endblock %}

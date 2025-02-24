@@ -1,0 +1,33 @@
+/* Container styling */
+.container {
+  max-width: 90%;
+  margin: auto;
+}
+
+/* Table styling */
+.table-responsive table {
+  table-layout: fixed;
+  width: 100%;
+  border-collapse: separate;  /* Allows spacing between rows */
+  border-spacing: 0 15px;       /* 15px vertical spacing */
+}
+
+/* Ensure long words wrap properly */
+.table-responsive th,
+.table-responsive td {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  box-sizing: border-box;
+}
+
+/* Remove outline from header rows */
+.table-responsive thead tr {
+  outline: none;
+}
+
+/* Add a nice outline to each body table row */
+.table-responsive tbody tr {
+  outline: 2px solid #ccc;
+  outline-offset: 3px;
+  text-align: center;
+}
