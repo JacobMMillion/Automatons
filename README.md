@@ -24,3 +24,5 @@ Automatons is a project designed to manage and update influencer data. The proje
 
 ### Prerequisites
 - requirements.txt can be recursively install all prerequisites
+
+env note: using vertenv
