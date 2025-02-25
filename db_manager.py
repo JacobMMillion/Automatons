@@ -60,7 +60,7 @@ class DailyVideoDataDB:
         create_table_query = """
         CREATE TABLE IF NOT EXISTS DailyVideoData (
             id SERIAL PRIMARY KEY,
-            creator_url TEXT,
+            post_url TEXT,
             creator_username TEXT,
             marketing_associate TEXT,
             app TEXT,
@@ -83,7 +83,7 @@ class DailyVideoDataDB:
         """
         query = """
         INSERT INTO DailyVideoData 
-        (creator_url, creator_username, marketing_associate, app, view_count, comment_count, caption, create_time, log_time)
+        (post_url, creator_username, marketing_associate, app, view_count, comment_count, caption, create_time, log_time)
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
         RETURNING id;
         """
