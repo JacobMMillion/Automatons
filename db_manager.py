@@ -68,7 +68,8 @@ class DailyVideoDataDB:
             comment_count INTEGER,
             caption TEXT,
             create_time TIMESTAMP,
-            log_time TIMESTAMP
+            log_time TIMESTAMP,
+            num_likes INTEGER
         );
         """
         with self.db_pool.get_connection() as conn:
@@ -76,15 +77,15 @@ class DailyVideoDataDB:
                 cur.execute(create_table_query)
             conn.commit()
 
-    def insert_row(self, url, username, associate, app, view_count, comment_count, caption, created_at, insert_time):
+    def insert_row(self, url, username, associate, app, view_count, comment_count, caption, created_at, insert_time, num_likes):
         """
         Insert a new video record
         Returns: The ID of the inserted record
         """
         query = """
         INSERT INTO DailyVideoData 
-        (post_url, creator_username, marketing_associate, app, view_count, comment_count, caption, create_time, log_time)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+        (post_url, creator_username, marketing_associate, app, view_count, comment_count, caption, create_time, log_time, num_likes)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         RETURNING id;
         """
         
@@ -99,7 +100,8 @@ class DailyVideoDataDB:
                     comment_count,
                     caption,
                     created_at,
-                    insert_time
+                    insert_time,
+                    num_likes
                 ))
                 view_id = cur.fetchone()[0]
                 conn.commit()

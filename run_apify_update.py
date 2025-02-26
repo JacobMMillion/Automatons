@@ -114,7 +114,7 @@ def reformat_date_to_est(date_str, fmt="%Y-%m-%d %H:%M:%S"):
 # ----------------------------
 # LOGS DATA TO DATABASE
 # ----------------------------
-def log(url, username, associate, app, view_count, comment_count, caption, created_at, insert_time):
+def log(url, username, associate, app, view_count, comment_count, caption, created_at, insert_time, likes_count):
     
     # log_message = (
     #     "========== LOG INFO ==========\n"
@@ -132,9 +132,7 @@ def log(url, username, associate, app, view_count, comment_count, caption, creat
     # print(log_message)
 
     db = DailyVideoDataDB()
-
-    db.ensure_table_exists()
-
+    db.ensure_table_exists()  # Make sure your table now includes a 'num_likes' column
     try:
         view_id = db.insert_row(
             url, 
@@ -145,7 +143,8 @@ def log(url, username, associate, app, view_count, comment_count, caption, creat
             comment_count, 
             caption, 
             created_at, 
-            insert_time
+            insert_time,
+            likes_count   # New parameter for likes count
         )
         print(f"Inserted record with id: {view_id}")
     except Exception as e:
@@ -281,10 +280,10 @@ def hit_apify(workbook, url):
 
     try:
         # Prepare the Actor input based on URL type
-        if url_type == "tiktok":  # Tiktok  
+        if url_type == "tiktok":  # TikTok  
             run_input = {
                 "excludePinnedPosts": True,
-                "postURLs": [url],           # Process a single URL
+                "postURLs": [url],
                 "resultsPerPage": 1,
                 "shouldDownloadCovers": False,
                 "shouldDownloadSlideshowImages": False,
@@ -296,7 +295,7 @@ def hit_apify(workbook, url):
         elif url_type == "instagram":  # Instagram
             run_input = {
                 "addParentData": False,
-                "directUrls": [url],         # Process a single URL
+                "directUrls": [url],
                 "enhanceUserSearchWithFacebookPage": False,
                 "isUserReelFeedURL": False,
                 "isUserTaggedFeedURL": False,
@@ -331,11 +330,16 @@ def hit_apify(workbook, url):
         item = next(APIFY_CLIENT.dataset(run["defaultDatasetId"]).iterate_items(), None)
 
         if item:
-
             view_count = item.get(view_key, 0)
             comment_count = item.get(comment_key, None)
+            
+            # Retrieve the likes count based on platform
+            if url_type == "tiktok":
+                likes_count = item.get("diggCount", 0)
+            elif url_type == "instagram":
+                likes_count = item.get("likesCount", 0)
 
-            # Convert to EST with consistant format
+            # Convert to EST with a consistent format
             raw_created_at = item.get(timestamp_key, None)
             created_at = reformat_date_to_est(raw_created_at)
     
@@ -355,7 +359,8 @@ def hit_apify(workbook, url):
             associate = parts[-1] if parts else ""
             insert_time = datetime.now(ZoneInfo("America/New_York")).strftime("%Y-%m-%d %H:%M:%S")
 
-            log(url, username, associate, app, view_count, comment_count, caption, created_at, insert_time)
+            # Pass the likes_count to the log function
+            log(url, username, associate, app, view_count, comment_count, caption, created_at, insert_time, likes_count)
 
             return view_count
         
