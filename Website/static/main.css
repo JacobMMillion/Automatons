@@ -31,3 +31,21 @@
   outline-offset: 3px;
   text-align: center;
 }
+
+
+/* NAVBAR */
+.custom-navbar {
+  /* Increase overall height and padding */
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  margin-bottom: 20px;
+  font-size: 1.5rem; /* Increase the font size */
+}
+
+.custom-navbar .navbar-brand {
+  font-size: 2rem; /* Bigger brand text */
+}
+
+.custom-navbar .nav-link {
+  padding: 0.75rem 1rem; /* Increase padding around links */
+}

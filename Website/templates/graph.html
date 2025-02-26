@@ -1,0 +1,88 @@
+{% extends "template.html" %}
+
+{% block title %}View Data Graph{% endblock %}
+
+{% block content %}
+  <h2>View Data Graph</h2>
+  
+  <!-- URL Input Form -->
+  <form method="post" action="{{ url_for('graph') }}">
+    <label for="url">Enter URL:</label>
+    <input type="text" id="url" name="url" value="{{ url or '' }}" required>
+    <button type="submit">Submit</button>
+  </form>
+
+  <br>
+
+  <!-- Display error if one exists -->
+  {% if error %}
+    <p style="color: red;">{{ error }}</p>
+  {% endif %}
+  
+  
+  <!-- If time series data is available, display the graph -->
+  {% if data %}
+  <canvas id="viewChart" width="800" height="400"></canvas>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    // Parse the time series data passed from Flask.
+    const timeSeries = {{ data | tojson }};
+    
+    // Extract labels (dates) and data for views, likes, and comments.
+    const labels = timeSeries.map(item => item.date);
+    const viewsData = timeSeries.map(item => item.views);
+    const likesData = timeSeries.map(item => item.likes);
+    const commentsData = timeSeries.map(item => item.comments);
+    
+    // Create the chart using Chart.js.
+    const ctx = document.getElementById('viewChart').getContext('2d');
+    const viewChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: 'Views Over Time',
+            data: viewsData,
+            fill: false,
+            borderColor: 'rgba(75, 192, 192, 1)',  // Teal color for views.
+            tension: 0.1
+          },
+          {
+            label: 'Likes Over Time',
+            data: likesData,
+            fill: false,
+            borderColor: 'rgba(255, 99, 132, 1)',   // Red color for likes.
+            tension: 0.1
+          },
+          {
+            label: 'Comments Over Time',
+            data: commentsData,
+            fill: false,
+            borderColor: 'rgba(54, 162, 235, 1)',   // Blue color for comments.
+            tension: 0.1
+          }
+        ]
+      },
+      options: {
+        scales: {
+          x: {
+            title: {
+              display: true,
+              text: 'Date'
+            }
+          },
+          y: {
+            title: {
+              display: true,
+              text: 'Count'
+            },
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  </script>
+{% endif %}
+
+{% endblock %}

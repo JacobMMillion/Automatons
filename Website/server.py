@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, Response
 import psycopg2
 import os
 import datetime
@@ -9,6 +9,27 @@ app = Flask(__name__)
 # Load environment variables from a .env file
 load_dotenv()
 CONN_STR = os.getenv('DATABASE_URL')
+USER = os.getenv('USERNAME')
+PW = os.getenv('PASSWORD')
+
+# Authentication
+def check_auth(username, password):
+    return username == USER and password == PW
+
+def authenticate():
+    return Response(
+        'Could not verify your access level for that URL.\n'
+        'You have to login with proper credentials', 401,
+        {'WWW-Authenticate': 'Basic realm="Login Required"'})
+
+def requires_auth(f):
+    def decorated(*args, **kwargs):
+        auth = request.authorization
+        if not auth or not check_auth(auth.username, auth.password):
+            return authenticate()
+        return f(*args, **kwargs)
+    decorated.__name__ = f.__name__
+    return decorated
 
 
 # Get all data from the table
@@ -23,8 +44,12 @@ def get_data():
     conn.close()
     return headers, rows
 
+
+
+
 # GET
 @app.route('/')
+@requires_auth
 def index():
     headers, rows = get_data()
     return render_template('index.html', headers=headers, rows=rows)
@@ -42,6 +67,57 @@ def search():
 def other():
     headers, rows = get_data()
     return render_template('other.html', headers=headers, rows=rows)
+
+@app.route('/graph', methods=['GET', 'POST'])
+def graph():
+    if request.method == 'POST':
+        url = request.form.get('url')
+        headers, rows = search_data('post_url', url)
+        
+        # Determine column indices.
+        try:
+            date_index = headers.index("log_time")
+            views_index = headers.index("view_count")
+            likes_index = headers.index("num_likes")
+            comments_index = headers.index("comment_count")
+        except ValueError:
+            return render_template('graph.html', error="Required columns not found", data=None, url=url)
+        
+        time_series = []
+        for row in rows:
+            date_val = row[date_index]
+            if isinstance(date_val, datetime.datetime):
+                dt = date_val
+            else:
+                try:
+                    dt = datetime.datetime.strptime(date_val, "%Y-%m-%d")
+                except ValueError:
+                    continue  # Skip rows with bad date formats.
+            try:
+                views = float(row[views_index])
+            except (ValueError, TypeError):
+                views = 0
+            try:
+                likes = float(row[likes_index])
+            except (ValueError, TypeError):
+                likes = 0
+            try:
+                comments = float(row[comments_index])
+            except (ValueError, TypeError):
+                comments = 0
+            
+            time_series.append({
+                'date': dt.strftime("%m/%d/%Y"),
+                'views': views,
+                'likes': likes,
+                'comments': comments
+            })
+        
+        time_series.sort(key=lambda x: datetime.datetime.strptime(x['date'], "%m/%d/%Y"))
+        
+        return render_template('graph.html', data=time_series, url=url)
+    else:
+        return render_template('graph.html')
 
 
 
