@@ -64,6 +64,15 @@ def search():
         headers, rows = search_data(category, value)
     return render_template('search.html', headers=headers, rows=rows, category=category, value=value)
 
+@app.route('/trials', methods=['GET'])
+@requires_auth
+def trials():
+    app_name = request.args.get('trial_option')
+    results = None
+    if app_name:
+        results = search_trials(app_name)
+    return render_template('trials.html', results=results, trial_option=app_name)
+
 @app.route('/other')
 @requires_auth
 def other():
@@ -159,6 +168,21 @@ def search_data(category, value):
     conn.close()
     return headers, rows
 
+
+def search_trials(app_name):
+
+    conn = psycopg2.connect(CONN_STR)
+    cursor = conn.cursor()
+
+    query = "SELECT COUNT(*) AS trial_count FROM NewTrials WHERE app_name = %s;"
+    cursor.execute(query, (app_name,))
+
+    rows = cursor.fetchall()
+    headers = [desc[0] for desc in cursor.description]
+    cursor.close()
+    conn.close()
+
+    return {'headers': headers, 'rows': rows}
 
 
 if __name__ == '__main__':

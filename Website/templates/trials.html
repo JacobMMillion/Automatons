@@ -1,0 +1,45 @@
+{% extends 'template.html' %}
+
+{% block title %}Trials{% endblock %}
+
+{% block content %}
+  <h1>Trials Page (in progress, eventually want to graph this daily data with a url chart to compare against)</h1>
+  <form method="GET" action="{{ url_for('trials') }}">
+    <label for="trial_option">Select Trial Option:</label>
+    <select id="trial_option" name="trial_option">
+      <option value="astra" {% if trial_option == 'astra' %}selected{% endif %}>Astra</option>
+      <option value="haven" {% if trial_option == 'haven' %}selected{% endif %}>Haven</option>
+      <option value="saga" {% if trial_option == 'saga' %}selected{% endif %}>Saga</option>
+      <option value="berry" {% if trial_option == 'berry' %}selected{% endif %}>Berry</option>
+    </select>
+    <button type="submit">Submit</button>
+  </form>
+
+  <br>
+
+  {% if results %}
+    <h2>Results</h2>
+    <div class="table-responsive">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            {% for header in results.headers %}
+              <th>{{ header }}</th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in results.rows %}
+            <tr>
+              {% for cell in row %}
+                <td>{{ cell }}</td>
+              {% endfor %}
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% elif trial_option %}
+    <p>No results found.</p>
+  {% endif %}
+{% endblock %}
