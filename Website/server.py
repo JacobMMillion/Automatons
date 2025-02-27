@@ -55,6 +55,7 @@ def index():
     return render_template('index.html', headers=headers, rows=rows)
 
 @app.route('/search', methods=['GET'])
+@requires_auth
 def search():
     category = request.args.get('category')
     value = request.args.get('value')
@@ -64,11 +65,13 @@ def search():
     return render_template('search.html', headers=headers, rows=rows, category=category, value=value)
 
 @app.route('/other')
+@requires_auth
 def other():
     headers, rows = get_data()
     return render_template('other.html', headers=headers, rows=rows)
 
 @app.route('/graph', methods=['GET', 'POST'])
+@requires_auth
 def graph():
     if request.method == 'POST':
         url = request.form.get('url')
