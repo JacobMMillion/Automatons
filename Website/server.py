@@ -169,6 +169,8 @@ def search_data(category, value):
     return headers, rows
 
 
+# Search for trials. Eventually we will pass in a date range, and we want to return the num trials for each day in that range
+# so that we can graph it alongside the URL
 def search_trials(app_name):
 
     conn = psycopg2.connect(CONN_STR)
