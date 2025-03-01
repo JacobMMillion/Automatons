@@ -3,27 +3,72 @@
 {% block title %}Overview{% endblock %}
 
 {% block content %}
-<div class="container">
-    <h1>Daily Video Data</h1>
-    <div class="table-responsive">
-        <table class="table">
-            <thead>
-                <tr>
-                    {% for header in headers %}
-                    <th>{{ header }}</th>
-                    {% endfor %}
-                </tr>
-            </thead>
-            <tbody>
-                {% for row in rows %}
-                <tr>
-                    {% for cell in row %}
-                    <td>{{ cell }}</td>
-                    {% endfor %}
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+<div class="container my-4">
+    <h1 class="mb-4">
+        Welcome to the 
+        <img src="{{ url_for('static', filename='vert-data.png') }}" alt="Vert Data Logo" style="max-width: 200px; vertical-align: middle;"> 
+        Dashboard
+      </h1>
+  <p class="lead">This dashboard provides quick access to various types of data analysis. Below is a summary of each section:</p>
+
+  <!-- Video-Data Explanation -->
+  <div class="card mb-3">
+    <div class="card-header">
+      <strong>Video-Data</strong>
     </div>
+    <div class="card-body">
+      <p class="card-text">
+        This tab allows an associate to enter a URL to view post statistics on a day-by-day basis, visualized with a graph. Use it to quickly assess video performance.
+      </p>
+    </div>
+  </div>
+
+  <!-- Trial-Data Explanation -->
+  <div class="card mb-3">
+    <div class="card-header">
+      <strong>Trial-Data</strong>
+    </div>
+    <div class="card-body">
+      <p class="card-text">
+        Similar to Video-Data, this section provides day-by-day visualizations for trials per app. It helps you monitor and compare trial activities over time.
+      </p>
+    </div>
+  </div>
+
+  <!-- Video-Search Explanation -->
+  <div class="card mb-3">
+    <div class="card-header">
+      <strong>Video-Search</strong>
+    </div>
+    <div class="card-body">
+      <p class="card-text">
+        Use Video-Search to find specific video data based on parameters such as post date, URL, creator, and more. It provides a targeted approach for data retrieval.
+      </p>
+    </div>
+  </div>
+
+  <!-- Existing Table Section (if still needed)
+  <h2 class="mt-5">Daily Video Data</h2>
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          {% for header in headers %}
+          <th>{{ header }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in rows %}
+        <tr>
+          {% for cell in row %}
+          <td>{{ cell }}</td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  -->
 </div>
 {% endblock %}

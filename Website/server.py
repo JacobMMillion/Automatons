@@ -71,7 +71,8 @@ def trials():
     results = None
     if app_name:
         results = search_trials(app_name)
-    return render_template('trials.html', results=results, trial_option=app_name)
+
+    return render_template('trials.html', data=results, trial_option=app_name)
 
 @app.route('/other')
 @requires_auth
@@ -172,19 +173,36 @@ def search_data(category, value):
 # Search for trials. Eventually we will pass in a date range, and we want to return the num trials for each day in that range
 # so that we can graph it alongside the URL
 def search_trials(app_name):
-
+    """
+    Retrieve daily trial counts for the specified app.
+    The query groups by a date column (assumed to be 'original_purchase_date_dt').
+    """
     conn = psycopg2.connect(CONN_STR)
     cursor = conn.cursor()
+    
+    query = """
+    SELECT DATE(original_purchase_date_dt) AS date, COUNT(*) AS trial_count
+    FROM NewTrials
+    WHERE app_name = %s
+    GROUP BY DATE(original_purchase_date_dt)
+    ORDER BY DATE(original_purchase_date_dt);
+    """
 
-    query = "SELECT COUNT(*) AS trial_count FROM NewTrials WHERE app_name = %s;"
     cursor.execute(query, (app_name,))
-
     rows = cursor.fetchall()
-    headers = [desc[0] for desc in cursor.description]
+    
+    # Convert rows into a list of dictionaries with ISO-formatted dates.
+    data = []
+    for row in rows:
+        date_value = row[0]
+        # If the date is a datetime.date, convert it to ISO format.
+        if isinstance(date_value, datetime.date):
+            date_value = date_value.isoformat()
+        data.append({"date": date_value, "trial_count": row[1]})
+    
     cursor.close()
     conn.close()
-
-    return {'headers': headers, 'rows': rows}
+    return data
 
 
 if __name__ == '__main__':

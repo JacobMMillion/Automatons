@@ -35,17 +35,17 @@
 
 /* NAVBAR */
 .custom-navbar {
-  /* Increase overall height and padding */
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-  margin-bottom: 20px;
-  font-size: 1.5rem; /* Increase the font size */
+  padding-top: 1.5rem;  /* Increased from 1rem */
+  padding-bottom: 1.5rem;  /* Increased from 1rem */
+  margin-bottom: 40px;  /* Increased from 20px */
+  font-size: 1.5rem;
+  background-color: #ADD8E6; /* Nice light blue */
 }
 
 .custom-navbar .navbar-brand {
-  font-size: 2rem; /* Bigger brand text */
+  font-size: 2.5rem;  /* Increased for a more prominent brand */
 }
 
 .custom-navbar .nav-link {
-  padding: 0.75rem 1rem; /* Increase padding around links */
+  padding: 1rem 1.5rem;  /* More padding for easier clicking/tapping */
 }

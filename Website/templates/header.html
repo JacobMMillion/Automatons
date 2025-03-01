@@ -1,5 +1,5 @@
 <!-- header.html -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light custom-navbar">
+<nav class="navbar navbar-expand-lg custom-navbar">
   <div class="container-fluid">
     <a class="navbar-brand" href="{{ url_for('index') }}">Home</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" 
@@ -8,17 +8,17 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link" href="{{ url_for('graph') }}">URL-Graph</a>
+        <li class="nav-item mx-3">
+          <a class="nav-link fs-3" href="{{ url_for('graph') }}">Video-Data</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{{ url_for('trials') }}">Trial-Data</a>
+        <li class="nav-item mx-3">
+          <a class="nav-link fs-3" href="{{ url_for('trials') }}">Trial-Data</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{{ url_for('search') }}">Search</a>
+        <li class="nav-item mx-3">
+          <a class="nav-link fs-3" href="{{ url_for('search') }}">Video-Search</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{{ url_for('other') }}">Other</a>
+        <li class="nav-item mx-3">
+          <a class="nav-link fs-3" href="{{ url_for('other') }}">Other</a>
         </li>
       </ul>
     </div>

@@ -3,7 +3,7 @@
 {% block title %}Trials{% endblock %}
 
 {% block content %}
-  <h1>Trials Page (in progress, eventually want to graph this daily data with a url chart to compare against)</h1>
+  <h1>Trials Data</h1>
   <form method="GET" action="{{ url_for('trials') }}">
     <label for="trial_option">Select Trial Option:</label>
     <select id="trial_option" name="trial_option">
@@ -17,29 +17,51 @@
 
   <br>
 
-  {% if results %}
-    <h2>Results</h2>
-    <div class="table-responsive">
-      <table class="table table-bordered">
-        <thead>
-          <tr>
-            {% for header in results.headers %}
-              <th>{{ header }}</th>
-            {% endfor %}
-          </tr>
-        </thead>
-        <tbody>
-          {% for row in results.rows %}
-            <tr>
-              {% for cell in row %}
-                <td>{{ cell }}</td>
-              {% endfor %}
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
+  {% if data %}
+    <canvas id="trialChart" width="800" height="400"></canvas>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+      // Parse the daily trial data passed from Flask.
+      const trialData = {{ data | tojson }};
+      
+      // Extract labels (dates) and trial counts.
+      const labels = trialData.map(item => item.date);
+      const counts = trialData.map(item => item.trial_count);
+      
+      // Create the chart using Chart.js.
+      const ctx = document.getElementById('trialChart').getContext('2d');
+      const trialChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Trials per Day',
+            data: counts,
+            fill: false,
+            borderColor: 'rgba(153, 102, 255, 1)',
+            tension: 0.1
+          }]
+        },
+        options: {
+          scales: {
+            x: {
+              title: {
+                display: true,
+                text: 'Date'
+              }
+            },
+            y: {
+              title: {
+                display: true,
+                text: 'Number of Trials'
+              },
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    </script>
   {% elif trial_option %}
-    <p>No results found.</p>
+    <p>No data found.</p>
   {% endif %}
 {% endblock %}
