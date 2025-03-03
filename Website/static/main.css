@@ -43,9 +43,26 @@
 }
 
 .custom-navbar .navbar-brand {
-  font-size: 2.5rem;  /* Increased for a more prominent brand */
+  padding-left: 2px;
+  font-size: 1.5rem;
+  color: #333; /* darker text on hover */
 }
 
 .custom-navbar .nav-link {
+  transition: background-color 0.3s ease, color 0.3s ease;
   padding: 1rem 1.5rem;  /* More padding for easier clicking/tapping */
+}
+
+.custom-navbar .nav-link:hover {
+  background-color: #f0f0f0; /* light background on hover */
+  color: #333; /* darker text on hover */
+}
+
+.custom-navbar .navbar-brand img {
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.custom-navbar .navbar-brand:hover img {
+  transform: scale(1.05);
+  opacity: 0.8;
 }

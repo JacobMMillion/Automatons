@@ -1,29 +1,26 @@
-<!-- header.html -->
-<nav class="navbar navbar-expand-lg custom-navbar">
+<nav class="navbar custom-navbar">
   <div class="container-fluid">
-    <a class="navbar-brand" href="{{ url_for('index') }}">Home</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" 
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item mx-3">
-          <a class="nav-link fs-3" href="{{ url_for('trial_upticks') }}">Trial-Upticks</a>
-        </li>
-        <li class="nav-item mx-3">
-          <a class="nav-link fs-3" href="{{ url_for('graph') }}">Video-Data</a>
-        </li>
-        <li class="nav-item mx-3">
-          <a class="nav-link fs-3" href="{{ url_for('trials') }}">Trial-Data</a>
-        </li>
-        <li class="nav-item mx-3">
-          <a class="nav-link fs-3" href="{{ url_for('search') }}">Video-Search</a>
-        </li>
-        <li class="nav-item mx-3">
-          <a class="nav-link fs-3" href="{{ url_for('other') }}">Other</a>
-        </li>
-      </ul>
+    <div class="row w-100">
+      <div class="col-12 col-sm-4 col-md">
+        <a class="navbar-brand" href="{{ url_for('index') }}">
+          <img src="{{ url_for('static', filename='vert-data.png') }}" alt="Vert Data" style="max-height: 80px;">
+        </a>
+      </div>
+      <div class="col-12 col-sm-4 col-md">
+        <a class="nav-link fs-3" href="{{ url_for('trial_upticks') }}">Trial-Upticks</a>
+      </div>
+      <div class="col-12 col-sm-4 col-md">
+        <a class="nav-link fs-3" href="{{ url_for('graph') }}">Video-Data</a>
+      </div>
+      <div class="col-12 col-sm-4 col-md">
+        <a class="nav-link fs-3" href="{{ url_for('trials') }}">Trial-Data</a>
+      </div>
+      <div class="col-12 col-sm-4 col-md">
+        <a class="nav-link fs-3" href="{{ url_for('search') }}">Video-Search</a>
+      </div>
+      <div class="col-12 col-sm-4 col-md">
+        <a class="nav-link fs-3" href="{{ url_for('other') }}">Other</a>
+      </div>
     </div>
   </div>
 </nav>
