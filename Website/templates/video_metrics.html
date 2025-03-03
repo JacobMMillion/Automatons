@@ -1,0 +1,52 @@
+<!-- video-metrics.html -->
+{% extends 'template.html' %}
+
+{% block title %}Video Metrics for Event {{ event_id }}{% endblock %}
+
+{% block content %}
+  <h1>Video Metrics for Event {{ event_id }}</h1>
+  <p>Below are the video metrics deltas for the selected trial trigger event (for videos posted within 2 weeks of the event).</p>
+  
+  <table style="border-collapse: collapse; width: 100%;">
+    <thead>
+      <tr>
+        <th style="border: 1px solid #aaa; padding: 8px;">Post URL</th>
+        <th style="border: 1px solid #aaa; padding: 8px;">Creator</th>
+        <th style="border: 1px solid #aaa; padding: 8px;">Marketing Associate</th>
+        <th style="border: 1px solid #aaa; padding: 8px;">Old Views</th>
+        <th style="border: 1px solid #aaa; padding: 8px;">New Views</th>
+        <th style="border: 1px solid #aaa; padding: 8px; background-color: #ffebcc;">Δ Views</th>
+        <th style="border: 1px solid #aaa; padding: 8px;">Old Comments</th>
+        <th style="border: 1px solid #aaa; padding: 8px;">New Comments</th>
+        <th style="border: 1px solid #aaa; padding: 8px; background-color: #ffebcc;">Δ Comments</th>
+        <th style="border: 1px solid #aaa; padding: 8px;">Old Likes</th>
+        <th style="border: 1px solid #aaa; padding: 8px;">New Likes</th>
+        <th style="border: 1px solid #aaa; padding: 8px; background-color: #ffebcc;">Δ Likes</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for metric in video_metrics %}
+      <tr>
+        <td style="border: 1px solid #aaa; padding: 8px;">{{ metric.post_url }}</td>
+        <td style="border: 1px solid #aaa; padding: 8px;">{{ metric.creator_username }}</td>
+        <td style="border: 1px solid #aaa; padding: 8px;">{{ metric.marketing_associate }}</td>
+        <td style="border: 1px solid #aaa; padding: 8px;">{{ metric.old_view_count }}</td>
+        <td style="border: 1px solid #aaa; padding: 8px;">{{ metric.new_view_count }}</td>
+        <td style="border: 1px solid #aaa; padding: 8px; background-color: #ffebcc;">{{ metric.delta_views }}</td>
+        <td style="border: 1px solid #aaa; padding: 8px;">{{ metric.old_comment_count }}</td>
+        <td style="border: 1px solid #aaa; padding: 8px;">{{ metric.new_comment_count }}</td>
+        <td style="border: 1px solid #aaa; padding: 8px; background-color: #ffebcc;">{{ metric.delta_comments }}</td>
+        <td style="border: 1px solid #aaa; padding: 8px;">{{ metric.old_likes }}</td>
+        <td style="border: 1px solid #aaa; padding: 8px;">{{ metric.new_likes }}</td>
+        <td style="border: 1px solid #aaa; padding: 8px; background-color: #ffebcc;">{{ metric.delta_likes }}</td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="12" style="border: 1px solid #aaa; padding: 8px; text-align: center;">
+          No video metrics found for this event.
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

@@ -3,6 +3,7 @@ import psycopg2
 import os
 import datetime
 from dotenv import load_dotenv
+import pytz
 
 app = Flask(__name__)
 
@@ -53,6 +54,71 @@ def get_data():
 def index():
     headers, rows = get_data()
     return render_template('index.html', headers=headers, rows=rows)
+
+@app.route('/trial_upticks')
+@requires_auth
+def trial_upticks():
+    """
+    Query the TrialTriggerEvents table and display each event.
+    Each row is clickable and links to the detailed video metrics for that event.
+    """
+    try:
+        conn = psycopg2.connect(CONN_STR)
+        cursor = conn.cursor()
+        # Select id, event_time, current_delta, and app (adjust columns as needed)
+        query = """
+            SELECT id, event_time, current_delta, app
+            FROM TrialTriggerEvents
+            ORDER BY event_time DESC;
+        """
+        cursor.execute(query)
+        events = cursor.fetchall()  # Each event is a tuple: (id, event_time, current_delta, app)
+        cursor.close()
+        conn.close()
+    except Exception as e:
+        print(f"Error fetching trial trigger events: {str(e)}")
+        events = []
+    
+    return render_template('trial_upticks.html', events=events)
+
+@app.route('/video_metrics/<int:event_id>')
+@requires_auth
+def video_metrics(event_id):
+    """
+    Query the VideoMetricDeltas table for the given trial trigger event ID,
+    sort the results by the sum of the absolute changes in views, comments, and likes (largest first),
+    and display the associated video metric delta rows.
+    """
+    try:
+        conn = psycopg2.connect(CONN_STR)
+        cursor = conn.cursor()
+        query = """
+            SELECT *
+            FROM VideoMetricDeltas
+            WHERE trial_trigger_event_id = %s
+            ORDER BY id ASC;
+        """
+        cursor.execute(query, (event_id,))
+        rows = cursor.fetchall()
+        headers = [desc[0] for desc in cursor.description]
+        cursor.close()
+        conn.close()
+    except Exception as e:
+        print(f"Error fetching video metric deltas for event {event_id}: {str(e)}")
+        rows = []
+        headers = []
+
+    # Convert rows to a list of dictionaries.
+    video_metrics = [dict(zip(headers, row)) for row in rows]
+
+    # sort by delta (pos and neg accounted for) descending
+    def total_net_delta(metric):
+        return (metric.get('delta_views') or 0) + (metric.get('delta_comments') or 0) + (metric.get('delta_likes') or 0)
+
+    video_metrics_sorted = sorted(video_metrics, key=total_net_delta, reverse=True)
+
+    return render_template('video_metrics.html', event_id=event_id, video_metrics=video_metrics_sorted)
+
 
 @app.route('/search', methods=['GET'])
 @requires_auth
@@ -204,6 +270,18 @@ def search_trials(app_name):
     conn.close()
     return data
 
+
+
+# HELPER FUNCTIONS
+@app.template_filter('datetimeformat')
+def datetimeformat(value, format='%b %d, %Y %I:%M %p'):
+    """Convert a datetime object to US/Eastern and format it."""
+    if value is None:
+        return ""
+    eastern = pytz.timezone('US/Eastern')
+    # Convert the value to EST (assumes value is timezone-aware)
+    value_est = value.astimezone(eastern)
+    return value_est.strftime(format)
 
 if __name__ == '__main__':
     app.run(debug=True)

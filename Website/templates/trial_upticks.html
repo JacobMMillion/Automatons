@@ -1,0 +1,27 @@
+<!-- trial_upticks.html -->
+{% extends 'template.html' %}
+
+{% block title %}Trial-Upticks{% endblock %}
+
+{% block content %}
+  <h1>Trial Trigger Events</h1>
+  <table style="width: 80%; margin: auto; border-collapse: collapse;">
+    <thead>
+      <tr>
+        <th style="border: 1px solid #aaa; padding: 8px;">App</th>
+        <th style="border: 1px solid #aaa; padding: 8px;">Event Time (EST)</th>
+        <th style="border: 1px solid #aaa; padding: 8px;">Trial Delta</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for event in events %}
+      <tr class="clickable" style="cursor: pointer; border: 1px solid #aaa; padding: 8px;"
+          onclick="window.location.href = '/video_metrics/' + {{ event[0] }}">
+        <td style="border: 1px solid #aaa; padding: 8px;">{{ event[3] }}</td>
+        <td style="border: 1px solid #aaa; padding: 8px;">{{ event[1]|datetimeformat }}</td>
+        <td style="border: 1px solid #aaa; padding: 8px;">{{ event[2] }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
